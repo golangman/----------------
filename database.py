@@ -1,16 +1,19 @@
-import pyodbc
-
-cnxn = pyodbc.connect(
-    "Driver={SQL Server Native Client 11.0};"
-    "Server=server_name;"
-    "Database=db_name;"
-    "Trusted_Connection=yes;"
-)
+from _database import *
 
 
-cursor = cnxn.cursor()
-cursor.execute("SELECT * FROM Table")
+class DatabaseManager:
+    def __init__(self) -> None:
+        self.driver = database
 
-for row in cursor:
-    print("row = %r" % (row,))
+    def sign_in(self, login: str, password: str) -> bool or Exception:
+        cursor = database.execute_sql(
+            f"SELECT * from users where users.login='{login}' and users.password='{password}';"
+        )
+
+        user = cursor.fetchone()
+
+        if not user:
+            return False
+
+        return user
 
